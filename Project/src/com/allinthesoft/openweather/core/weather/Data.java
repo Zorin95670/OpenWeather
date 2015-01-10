@@ -1,5 +1,7 @@
 package com.allinthesoft.openweather.core.weather;
 
+import java.text.DecimalFormat;
+
 import com.allinthesoft.openweather.R;
 
 
@@ -62,21 +64,21 @@ public class Data {
 
 	public String getWind() {
 		// TODO Auto-generated method stub
-		return getMainWeather().getWindSpeed() + "Km/H\nDeg : " + getMainWeather().getWindDeg();
+		return getMainWeather().getWindSpeed() + "m/s\nDeg : " + getMainWeather().getWindDeg() +"°";
 	}
 
 	public String getTemperature(boolean fahrenheit) {
-		// TODO Auto-generated method stub
+		DecimalFormat d = new DecimalFormat("##,#");
 		double t = getMainWeather().getTemp();
 		double tmi = getMainWeather().getTempMin();
 		double tma = getMainWeather().getTempMax();
 		if(!fahrenheit){
-			t = ((t - 32)*5)/9;;
-			tmi = ((tmi - 32)*5)/9;;
-			tma = ((tma - 32)*5)/9;;
-			return t + "°C\nMin : " + tmi + "°C\nMax : " + tmi + "°C";
+			return d.format((t - 273.15)) + "°C\nMin : " + d.format((tmi - 273.15)) + "°C\nMax : " + d.format((tmi - 273.15)) + "°C";
 		}
-		return t + "°F\nMin : " + tmi + "°F\nMax : " + tmi + "°F";
+		t = (t - 273.15)* 1.8000 + 32.00;
+		tmi = (tmi - 273.15)* 1.8000 + 32.00;
+		tma = (tma - 273.15)* 1.8000 + 32.00;
+		return d.format(t) + "°F\nMin : " + d.format(tmi) + "°F\nMax : " + d.format(tmi) + "°F";
 	}
 	public int getPicture(){
 		int id = getMainWeather().getId();

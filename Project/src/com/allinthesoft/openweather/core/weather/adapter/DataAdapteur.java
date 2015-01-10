@@ -1,7 +1,5 @@
 package com.allinthesoft.openweather.core.weather.adapter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.allinthesoft.openweather.R;
+import com.allinthesoft.openweather.common.BaseApplication;
 import com.allinthesoft.openweather.core.weather.Data;
 import com.allinthesoft.openweather.core.weather.DataHolder;
 
@@ -18,10 +17,13 @@ public class DataAdapteur extends ArrayAdapter<Data> {
 
 	private LayoutInflater layoutInflater;
 
-	public DataAdapteur(Context context, int textViewResourceId, List<Data> list) {
-		super(context, textViewResourceId, list);
+	private BaseApplication base;
+	
+	public DataAdapteur(Context context, int textViewResourceId, BaseApplication base) {
+		super(context, textViewResourceId, base.getListData());
 		layoutInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.base = base;
 	}
 
 	@Override
@@ -49,7 +51,7 @@ public class DataAdapteur extends ArrayAdapter<Data> {
 		}
 		holder.mainView.setImageResource(getItem(position).getPicture());
 		holder.mainView.setId(position);
-		holder.tempView.setText(getItem(position).getMainWeather().getTemp());
+		holder.tempView.setText(getItem(position).getTemperature(base.isFahrenheit()));
 		holder.cityView.setText(getItem(position).getName());
 		if (getItem(position).isCooler()) {
 			holder.tokenView.setImageResource(R.drawable.cold);

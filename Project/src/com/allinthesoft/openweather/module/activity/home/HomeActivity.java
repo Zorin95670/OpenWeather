@@ -37,8 +37,7 @@ public class HomeActivity extends MyActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		ListView list = (ListView) findViewById(R.id.list_city);
-		adapter = new DataAdapteur(this, R.id.list_city,
-				getBaseApplication().getListData());
+		adapter = new DataAdapteur(this, R.id.list_city, getBaseApplication());
 		list.setAdapter(adapter);
 		
 		list.setOnItemClickListener(new OnItemClickListener() {

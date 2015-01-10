@@ -33,6 +33,10 @@ public class BaseApplication extends Application {
 		init();
 	}
 
+	public boolean isFahrenheit(){
+		return fahrenheit;
+	}
+	
 	private void init() {
 		try {
 			FileInputStream fis = openFileInput("data.json");

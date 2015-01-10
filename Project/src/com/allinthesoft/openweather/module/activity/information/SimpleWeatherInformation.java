@@ -84,7 +84,7 @@ public class SimpleWeatherInformation extends MyActivity implements
 		if (type == 0) {
 			information.setText(getBaseApplication().getType(type));
 			main.setImageResource(getData().getPicture());
-			data.setText(getData().getTemperature());
+			data.setText(getData().getTemperature(getBaseApplication().isFahrenheit()));
 		} else if (type == 1) {
 			information.setText(getBaseApplication().getType(type));
 			main.setImageResource(R.drawable.wind);
