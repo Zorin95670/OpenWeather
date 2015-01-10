@@ -27,5 +27,10 @@
     
     
     <string name="error_get_location">Cannot get Location.</string>
+    <string name="error_conf_convert_json">Cannot convert the configuration data.</string>
     <string name="error_constant_file_create">Error create data application.</string>
+    <string name="error_filewritter_close">Cannot close file.</string>
+    <string name="error_save_conf">Cannot save configuration.</string>
+    <string name="error_read_conf_file">Cannot read the file configuration</string>
+    <string name="error_malformed_conf">Configuration is corrupted.</string>
 </resources>

@@ -6,7 +6,7 @@ import com.allinthesoft.openweather.R;
 public class Data {
 	private Location location;
 	private boolean myLocation;
-	private String name;
+	private String name, country;
 	
 	private String sunrise, sunset;
 	
@@ -65,9 +65,18 @@ public class Data {
 		return getMainWeather().getWindSpeed() + "Km/H\nDeg : " + getMainWeather().getWindDeg();
 	}
 
-	public String getTemperature() {
+	public String getTemperature(boolean fahrenheit) {
 		// TODO Auto-generated method stub
-		return getMainWeather().getTemp() + "°C\nMin : " + getMainWeather().getTempMin() + "°C\nMax : " + getMainWeather().getTempMax() + "°C";
+		double t = getMainWeather().getTemp();
+		double tmi = getMainWeather().getTempMin();
+		double tma = getMainWeather().getTempMax();
+		if(!fahrenheit){
+			t = ((t - 32)*5)/9;;
+			tmi = ((tmi - 32)*5)/9;;
+			tma = ((tma - 32)*5)/9;;
+			return t + "°C\nMin : " + tmi + "°C\nMax : " + tmi + "°C";
+		}
+		return t + "°F\nMin : " + tmi + "°F\nMax : " + tmi + "°F";
 	}
 	public int getPicture(){
 		int id = getMainWeather().getId();
@@ -113,5 +122,18 @@ public class Data {
 
 	public void setMyLocation(boolean myLocation) {
 		this.myLocation = myLocation;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	
+	@Override
+	public String toString(){
+		return getName() + "," + getCountry();
 	}
 }

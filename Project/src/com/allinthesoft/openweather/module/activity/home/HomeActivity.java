@@ -1,5 +1,6 @@
 package com.allinthesoft.openweather.module.activity.home;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.allinthesoft.openweather.R;
 import com.allinthesoft.openweather.common.MyActivity;
@@ -38,6 +40,7 @@ public class HomeActivity extends MyActivity {
 		adapter = new DataAdapteur(this, R.id.list_city,
 				getBaseApplication().getListData());
 		list.setAdapter(adapter);
+		
 		list.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -60,8 +63,7 @@ public class HomeActivity extends MyActivity {
 							JSONWeatherTask task = new JSONWeatherTask();
 							task.execute(new String[]{v.getText() + ""});
 							try {
-								Data data = task.get();
-								getBaseApplication().add(data);
+								getBaseApplication().add(task.get());
 								if(getBaseApplication().isDataChange()){
 									adapter.notifyDataSetChanged();
 								}
@@ -73,6 +75,8 @@ public class HomeActivity extends MyActivity {
 							} catch (ExecutionException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
+							} catch (AndroidException e) {
+								Toast.makeText(getBaseContext(), getString(e.getMessageId()), Toast.LENGTH_LONG).show();
 							}
 						}
 						return false;
@@ -97,6 +101,8 @@ public class HomeActivity extends MyActivity {
 				} catch (ExecutionException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch (AndroidException e) {
+					Toast.makeText(getBaseContext(), getString(e.getMessageId()), Toast.LENGTH_LONG).show();
 				}
 			}
 			
@@ -122,7 +128,34 @@ public class HomeActivity extends MyActivity {
 			}
 		});
 		
-		
+		initCities();
+	}
+
+	private void initCities() {
+		List<Data> cities = getBaseApplication().getListData();
+		if(cities != null){
+			int len = cities.size();
+			for(int i = 0 ; i < len ; i++){
+				JSONWeatherTask task = new JSONWeatherTask();
+				task.execute(new String[]{cities.get(i).getName()});
+				try {
+					Data data = task.get();
+					cities.set(i, data);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(len > 0){
+				adapter.notifyDataSetChanged();
+			}
+		} else {
+			// TODO problem
+		}
 	}
 
 	private void initAutoComplete() {
@@ -141,5 +174,11 @@ public class HomeActivity extends MyActivity {
 		 * 
 		 * mactv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 		 */
+	}
+	
+	@Override
+	protected void onStop() {
+		getBaseApplication().maj();
+		super.onStop();
 	}
 }

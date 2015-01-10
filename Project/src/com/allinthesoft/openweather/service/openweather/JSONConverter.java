@@ -26,6 +26,7 @@ public class JSONConverter {
 					.getInt("id"));
 
 			JSONObject sys = root.getJSONObject("sys");
+			data.setCountry(sys.getString("country"));
 			data.setSunrise(sys.getDouble("sunrise") + "");
 			data.setSunset(sys.getDouble("sunset") + "");
 
