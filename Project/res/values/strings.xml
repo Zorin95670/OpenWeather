@@ -4,5 +4,28 @@
     <string name="app_name">OpenWeather</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="city_search">City search</string>
+    <string name="dt_delete_item">Delete city</string>
+    <string name="dm_delete_item">Do you want delete city ?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
 
+    <string name="default_city">Paris</string>
+    <string name="default_temp">10°C</string>
+    <string name="default_information">Temperature</string>
+    <string name="default_data">15°C</string>
+    
+    <string name="cd_home">Back to home</string>
+    <string name="cd_main">The main</string>
+    
+    <string name="type_info">Information</string>
+    <string name="type_temp">Temperature</string>
+    <string name="type_wind">Wind</string>
+    
+    
+    <string name="error_get_location">Cannot get Location.</string>
+    <string name="error_constant_file_create">Error create data application.</string>
 </resources>
