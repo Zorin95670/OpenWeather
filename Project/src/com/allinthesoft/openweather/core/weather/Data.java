@@ -10,6 +10,8 @@ public class Data {
 	private boolean myLocation;
 	private String name, country;
 	
+	private String id;
+	
 	private String sunrise, sunset;
 	
 	private Weather mainWeather;
@@ -153,5 +155,13 @@ public class Data {
 	public String getHumidity() {
 		// TODO Auto-generated method stub
 		return new DecimalFormat("##").format(mainWeather.getHumidity()) + " %";
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }

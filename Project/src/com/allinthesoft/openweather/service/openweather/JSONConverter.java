@@ -29,6 +29,7 @@ public class JSONConverter {
 			data.setCountry(sys.getString("country"));
 			data.setSunrise(sys.getDouble("sunrise") + "");
 			data.setSunset(sys.getDouble("sunset") + "");
+			data.setId(root.getString("name") + "," + sys.getString("country"));
 
 			JSONObject main = root.getJSONObject("main");
 			weather.setTemp(main.getDouble("temp"));

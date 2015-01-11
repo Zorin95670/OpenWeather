@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RadioGroup
+        android:id="@+id/do_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:padding="15dp" >
+
+        <RadioButton
+            android:id="@+id/do_fahrenheit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/option_F" />
+
+        <RadioButton
+            android:id="@+id/do_celcius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/option_C" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/do_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/ok" />
+
+</LinearLayout>

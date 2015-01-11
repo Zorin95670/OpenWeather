@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.allinthesoft.openweather.R;
 import com.allinthesoft.openweather.core.exception.AndroidException;
@@ -59,7 +60,7 @@ public class BaseApplication extends Application {
 		
 	}
 	
-	private void init(String json) throws AndroidException {
+	private void init(String json) {
 		if (json != null && json.length() != 0) {
 			try {
 				JSONObject root = new JSONObject(json);
@@ -69,12 +70,11 @@ public class BaseApplication extends Application {
 				Data data;
 				for (int i = 0; i < array.length(); i++) {
 					data = new Data();
-					data.setName(array.getString(i));
+					data.setId(array.getString(i));
 					list.add(data);
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-				throw new AndroidException(R.string.error_malformed_conf);
 			}
 		}
 	}
@@ -108,6 +108,7 @@ public class BaseApplication extends Application {
 				}
 			}
 			if (check) {
+				data.setMyLocation(false);
 				list.add(data);
 			}
 		}
@@ -119,13 +120,13 @@ public class BaseApplication extends Application {
 			for (int index = 0; index < list.size(); index++) {
 				if (data.getName().equals(list.get(index).getName())) {
 					check = false;
-					if (!list.get(index).isMyLocation()) {
-						list.get(index).setMyLocation(true);
-						setDataChange(true);
-					}
-					break;
+					list.get(index).setMyLocation(true);
+					setDataChange(true);
+				} else {
+					list.get(index).setMyLocation(false);
 				}
 			}
+			
 			if (check) {
 				data.setMyLocation(true);
 				list.add(data);
@@ -172,7 +173,8 @@ public class BaseApplication extends Application {
 			JSONArray array = new JSONArray();
 			if (list.size() != 0) {
 				for (int i = 0 ; i < list.size() ; i++) {
-					array.put(list.get(i).toString());
+					Log.i("TEST", "Save " + list.get(i).toString());
+					array.put(list.get(i).getId());
 				}
 				root.put("cities", array);
 			}
@@ -181,5 +183,10 @@ public class BaseApplication extends Application {
 			e.printStackTrace();
 		}
 		return root.toString();
+	}
+
+	public void setFahrenheit(boolean b) {
+		this.fahrenheit = b;
+		
 	}
 }

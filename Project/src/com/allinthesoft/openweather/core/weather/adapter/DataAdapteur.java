@@ -50,7 +50,6 @@ public class DataAdapteur extends ArrayAdapter<Data> {
 			holder = (DataHolder) convertView.getTag();
 		}
 		holder.mainView.setImageResource(getItem(position).getPicture());
-		holder.mainView.setId(position);
 		holder.tempView.setText(getItem(position).getShortTemperature(base.isFahrenheit()));
 		holder.cityView.setText(getItem(position).getName());
 		if (getItem(position).isCooler()) {
