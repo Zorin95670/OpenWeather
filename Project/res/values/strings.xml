@@ -24,6 +24,7 @@
     <string name="type_info">Information</string>
     <string name="type_temp">Temperature</string>
     <string name="type_wind">Wind</string>
+    <string name="type_humidity">Humidity</string>
     
     
     <string name="error_get_location">Cannot get Location.</string>

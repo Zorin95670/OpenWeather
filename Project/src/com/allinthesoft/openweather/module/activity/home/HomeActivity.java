@@ -22,6 +22,7 @@ import com.allinthesoft.openweather.common.MyActivity;
 import com.allinthesoft.openweather.core.exception.AndroidException;
 import com.allinthesoft.openweather.core.weather.Data;
 import com.allinthesoft.openweather.core.weather.adapter.DataAdapteur;
+import com.allinthesoft.openweather.core.weather.adapter.PlacesAutoCompleteAdapter;
 import com.allinthesoft.openweather.module.activity.information.SimpleWeatherInformation;
 import com.allinthesoft.openweather.module.listener.DeleteItemOnListView;
 import com.allinthesoft.openweather.module.listener.OnLocalizeListener;
@@ -159,20 +160,8 @@ public class HomeActivity extends MyActivity {
 
 	private void initAutoComplete() {
 
-		/*
-		 * R.array.countries; String[] countries =
-		 * getResources().getStringArray( R.); ArrayAdapter adapter = new
-		 * ArrayAdapter(this, android.R.layout.simple_list_item_1, countries);
-		 * 
-		 * actv = (AutoCompleteTextView)
-		 * findViewById(R.id.autoCompleteTextView1); mactv =
-		 * (MultiAutoCompleteTextView)
-		 * findViewById(R.id.multiAutoCompleteTextView1);
-		 * 
-		 * actv.setAdapter(adapter); mactv.setAdapter(adapter);
-		 * 
-		 * mactv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-		 */
+		AutoCompleteTextView autoCompView = (AutoCompleteTextView) findViewById(R.id.city_search);
+	    autoCompView.setAdapter(new PlacesAutoCompleteAdapter(this, R.layout.list_item));
 	}
 	
 	@Override

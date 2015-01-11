@@ -80,6 +80,17 @@ public class Data {
 		tma = (tma - 273.15)* 1.8000 + 32.00;
 		return d.format(t) + "°F\nMin : " + d.format(tmi) + "°F\nMax : " + d.format(tmi) + "°F";
 	}
+	
+	public String getShortTemperature(boolean fahrenheit){
+		DecimalFormat d = new DecimalFormat("##,#");
+		double t = getMainWeather().getTemp();
+		if(!fahrenheit){
+			return d.format((t - 273.15)) + "°C";
+		}
+		t = (t - 273.15)* 1.8000 + 32.00;
+		return d.format(t) + "°F";
+	}
+	
 	public int getPicture(){
 		int id = getMainWeather().getId();
 		if(id >= 200 && id < 300){
@@ -137,5 +148,10 @@ public class Data {
 	@Override
 	public String toString(){
 		return getName() + "," + getCountry();
+	}
+
+	public String getHumidity() {
+		// TODO Auto-generated method stub
+		return new DecimalFormat("##").format(mainWeather.getHumidity()) + " %";
 	}
 }

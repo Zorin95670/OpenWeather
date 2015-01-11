@@ -89,6 +89,10 @@ public class SimpleWeatherInformation extends MyActivity implements
 			information.setText(getBaseApplication().getType(type));
 			main.setImageResource(R.drawable.wind);
 			data.setText(getData().getWind());
+		} else if(type == 2){
+			information.setText(getBaseApplication().getType(type));
+			main.setImageResource(R.drawable.humidity);
+			data.setText(getData().getHumidity());
 		}
 	}
 
@@ -124,7 +128,7 @@ public class SimpleWeatherInformation extends MyActivity implements
 	}
 
 	public void increaseTypeData() {
-		if (type < 1) {
+		if (type < 2) {
 			type++;
 		}
 	}

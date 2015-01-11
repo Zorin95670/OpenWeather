@@ -92,6 +92,8 @@ public class BaseApplication extends Application {
 			return R.string.type_temp;
 		} else if (indexTypeData == 1) {
 			return R.string.type_wind;
+		} else if(indexTypeData == 2){
+			return R.string.type_humidity;
 		}
 		return R.string.type_info;
 	}

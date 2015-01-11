@@ -51,7 +51,7 @@ public class DataAdapteur extends ArrayAdapter<Data> {
 		}
 		holder.mainView.setImageResource(getItem(position).getPicture());
 		holder.mainView.setId(position);
-		holder.tempView.setText(getItem(position).getTemperature(base.isFahrenheit()));
+		holder.tempView.setText(getItem(position).getShortTemperature(base.isFahrenheit()));
 		holder.cityView.setText(getItem(position).getName());
 		if (getItem(position).isCooler()) {
 			holder.tokenView.setImageResource(R.drawable.cold);
