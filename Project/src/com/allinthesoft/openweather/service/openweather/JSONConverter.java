@@ -4,8 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.allinthesoft.openweather.core.weather.Data;
-import com.allinthesoft.openweather.core.weather.Weather;
+import com.allinthesoft.openweather.core.weather.CityData;
+import com.allinthesoft.openweather.core.weather.WeatherData;
 
 public class JSONConverter {
 
@@ -15,12 +15,12 @@ public class JSONConverter {
 		this.json = json;
 	}
 
-	public Data getWeatherData() throws JSONException {
+	public CityData getWeatherData() throws JSONException {
 		if (json != null) {
 			JSONObject root = new JSONObject(json);
 
-			Data data = new Data();
-			Weather weather = new Weather();
+			CityData data = new CityData();
+			WeatherData weather = new WeatherData();
 			data.setName(root.getString("name"));
 			weather.setId(root.getJSONArray("weather").getJSONObject(0)
 					.getInt("id"));

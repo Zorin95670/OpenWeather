@@ -4,17 +4,17 @@ import org.json.JSONException;
 
 import android.os.AsyncTask;
 
-import com.allinthesoft.openweather.core.weather.Data;
+import com.allinthesoft.openweather.core.weather.CityData;
 import com.allinthesoft.openweather.service.openweather.HttpClient;
 import com.allinthesoft.openweather.service.openweather.JSONConverter;
 
-public class JSONWeatherTask extends AsyncTask<String, Void, Data> {
+public class JSONWeatherTask extends AsyncTask<String, Void, CityData> {
 
 	@Override
-	protected Data doInBackground(String... params) {
+	protected CityData doInBackground(String... params) {
 		String json = ((new HttpClient()).getWeatherData(params[0]));
 		JSONConverter converter = new JSONConverter(json);
-		Data data = null;
+		CityData data = null;
 		try {
 			data = converter.getWeatherData();
 		} catch (JSONException e) {
@@ -26,7 +26,7 @@ public class JSONWeatherTask extends AsyncTask<String, Void, Data> {
 	}
 
 	@Override
-	protected void onPostExecute(Data data) {
+	protected void onPostExecute(CityData data) {
 		super.onPostExecute(data);
 	}
 }

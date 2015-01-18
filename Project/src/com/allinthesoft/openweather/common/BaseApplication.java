@@ -12,30 +12,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Application;
-import android.util.Log;
 
-import com.allinthesoft.openweather.R;
 import com.allinthesoft.openweather.core.exception.AndroidException;
+import com.allinthesoft.openweather.core.weather.CityData;
 import com.allinthesoft.openweather.core.weather.Data;
-import com.allinthesoft.openweather.tools.list.core.array.ArrayExtendedList;
 
 public class BaseApplication extends Application {
 
-	private ArrayExtendedList<Data> list;
-
-	private boolean dataChange;
-	private boolean fahrenheit;
+	private Data data;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		setList(new ArrayExtendedList<Data>());
-		setDataChange(false);
+		//deleteFile("data.json");
+		initData();
 		init();
 	}
-
-	public boolean isFahrenheit(){
-		return fahrenheit;
+	
+	private void initData(){
+		if(data == null){
+			data = new Data();
+		}
 	}
 	
 	private void init() {
@@ -61,92 +58,33 @@ public class BaseApplication extends Application {
 	}
 	
 	private void init(String json) {
+		initData();
 		if (json != null && json.length() != 0) {
 			try {
 				JSONObject root = new JSONObject(json);
 				String tmp = root.getString("fahrenheit");
-				fahrenheit = "yes".equals(tmp);
+				data.setFahrenheit("yes".equals(tmp));
 				JSONArray array = root.getJSONArray("cities");
-				Data data;
+				CityData cityData;
 				for (int i = 0; i < array.length(); i++) {
-					data = new Data();
-					data.setId(array.getString(i));
-					list.add(data);
+					cityData = new CityData();
+					cityData.setId(array.getString(i));
+					data.add(cityData);
 				}
 			} catch (JSONException e) {
+				e.printStackTrace();
+			} catch (AndroidException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 
-	public ArrayExtendedList<Data> getListData() {
-		return list;
-	}
-
-	public void setList(ArrayExtendedList<Data> list) {
-		this.list = list;
-	}
-
-	public int getType(int indexTypeData) {
-		if (indexTypeData == 0) {
-			return R.string.type_temp;
-		} else if (indexTypeData == 1) {
-			return R.string.type_wind;
-		} else if(indexTypeData == 2){
-			return R.string.type_humidity;
-		}
-		return R.string.type_info;
-	}
-
-	public void add(Data data) throws AndroidException {
-		if (data != null) {
-			boolean check = true;
-			for (int index = 0; index < list.size(); index++) {
-				if (data.getName().equals(list.get(index).getName())) {
-					check = false;
-					break;
-				}
-			}
-			if (check) {
-				data.setMyLocation(false);
-				list.add(data);
-			}
-		}
-	}
-
-	public void addCurent(Data data) throws AndroidException {
-		if (data != null) {
-			boolean check = true;
-			for (int index = 0; index < list.size(); index++) {
-				if (data.getName().equals(list.get(index).getName())) {
-					check = false;
-					list.get(index).setMyLocation(true);
-					setDataChange(true);
-				} else {
-					list.get(index).setMyLocation(false);
-				}
-			}
-			
-			if (check) {
-				data.setMyLocation(true);
-				list.add(data);
-				setDataChange(true);
-			}
-		}
-	}
-
-	public boolean isDataChange() {
-		Boolean tmp = dataChange;
-		setDataChange(false);
-		return tmp;
-	}
-
-	public void setDataChange(boolean dataChange) {
-		this.dataChange = dataChange;
-	}
+	
 	
 	public void maj(){
-		String texte = toJSON();
+		initData();
+		String texte = data.toJSON();
 		try {
 			FileOutputStream fOut = openFileOutput("data.json", MODE_WORLD_WRITEABLE);
 			OutputStreamWriter osw = new OutputStreamWriter(fOut);
@@ -162,31 +100,11 @@ public class BaseApplication extends Application {
 		}
 	}
 
-	private String toJSON() {
-		JSONObject root = new JSONObject();
-		try {
-			if (fahrenheit) {
-				root.put("fahrenheit", "yes");
-			} else {
-				root.put("fahrenheit", "no");
-			}
-			JSONArray array = new JSONArray();
-			if (list.size() != 0) {
-				for (int i = 0 ; i < list.size() ; i++) {
-					Log.i("TEST", "Save " + list.get(i).toString());
-					array.put(list.get(i).getId());
-				}
-				root.put("cities", array);
-			}
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return root.toString();
+	public Data getData() {
+		return data;
 	}
 
-	public void setFahrenheit(boolean b) {
-		this.fahrenheit = b;
-		
+	public void setData(Data data) {
+		this.data = data;
 	}
 }

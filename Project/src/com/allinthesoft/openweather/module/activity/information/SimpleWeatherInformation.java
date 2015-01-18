@@ -1,25 +1,24 @@
 package com.allinthesoft.openweather.module.activity.information;
 
+import java.util.List;
+
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.allinthesoft.openweather.R;
-import com.allinthesoft.openweather.common.MyActivity;
-import com.allinthesoft.openweather.core.weather.Data;
-import com.allinthesoft.openweather.module.activity.home.HomeActivity;
+import com.allinthesoft.openweather.common.DataActivity;
+import com.allinthesoft.openweather.core.weather.CityData;
+import com.allinthesoft.openweather.core.weather.Type;
 import com.allinthesoft.openweather.module.listener.BackToHome;
+import com.allinthesoft.openweather.module.listener.CityLeftOnClickListener;
+import com.allinthesoft.openweather.module.listener.CityRightOnCLickOnListener;
+import com.allinthesoft.openweather.module.listener.OnSwipeListener;
 
-public class SimpleWeatherInformation extends MyActivity implements
-		OnTouchListener {
+public class SimpleWeatherInformation extends DataActivity {
 
-	private int index = 0;
-	private int type = 0;
+	private Type type;
 
 	private TextView information, data, city, cityLeft, cityRight;
 	private ImageView main;
@@ -28,12 +27,37 @@ public class SimpleWeatherInformation extends MyActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_simple_weather_information);
+		
+		type = new Type();
 		findViewById(R.id.aswi_home).setOnClickListener(new BackToHome(this));
 		initView();
-		index = getIntent().getIntExtra("Data", 0);
 		initData();
 		RelativeLayout view = (RelativeLayout) findViewById(R.id.aswi_content);
-		view.setOnTouchListener(this);
+		view.setOnTouchListener(new OnSwipeListener() {
+			
+			@Override
+			public void swipe() {
+				boolean back = false;
+				if (getAction() == Action.SWIPE_DOWN_TO_UP) {
+					type.increase();
+				} else if (getAction() == Action.SWIPE_UP_TO_DOWN) {
+					type.decrease();
+				} else if (getAction() == Action.SWIPE_RIGHT_TO_LEFT) {
+					getBaseApplication().getData().increase();
+				} else if (getAction() == Action.SWIPE_LEFT_TO_RIGHT) {
+					if(getBaseApplication().getData().getPosition() == 0)
+						back = true;
+					getBaseApplication().getData().decrease();
+				}
+				if(back){
+					
+					SimpleWeatherInformation.this.finish();
+					SimpleWeatherInformation.this.overridePendingTransition(R.anim.other_out,R.anim.main_in);
+				} else {
+					initData();
+				}
+			}
+		});
 
 	}
 
@@ -45,88 +69,42 @@ public class SimpleWeatherInformation extends MyActivity implements
 		information = (TextView) findViewById(R.id.aswi_information);
 		main = (ImageView) findViewById(R.id.aswi_main);
 
-		cityLeft.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (index > 0) {
-					decreaseData();
-					initData();
-				}
-			}
-		});
-		cityRight.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				if (index < getBaseApplication().getListData().size() - 1) {
-					increaseData();
-					initData();
-				}
-			}
-		});
+		cityLeft.setOnClickListener(new CityLeftOnClickListener(this));
+		cityRight.setOnClickListener(new CityRightOnCLickOnListener(this));
 	}
 
 	public void initData() {
+		int index = getBaseApplication().getData().getPosition();
+		List<CityData> cities = getBaseApplication().getData().getCities();
 		if (index > 0) {
 			cityLeft.setVisibility(TextView.VISIBLE);
-			cityLeft.setText(getData(index - 1).getName());
+			cityLeft.setText(cities.get(index - 1).getName());
 		} else {
 			cityLeft.setVisibility(TextView.INVISIBLE);
 		}
-		if (index < getBaseApplication().getListData().size() - 1) {
+		if (index < cities.size() - 1) {
 			cityRight.setVisibility(TextView.VISIBLE);
-			cityRight.setText(getData(index + 1).getName());
+			cityRight.setText(cities.get(index + 1).getName());
 		} else {
 			cityRight.setVisibility(TextView.INVISIBLE);
 		}
-		city.setText(getData().getName());
-		if (type == 0) {
-			information.setText(getBaseApplication().getType(type));
-			main.setImageResource(getData().getPicture());
-			data.setText(getData().getTemperature(getBaseApplication().isFahrenheit()));
-		} else if (type == 1) {
-			information.setText(getBaseApplication().getType(type));
+		city.setText(cities.get(index).getName());
+		if (type.getPosition() == 0) {
+			information.setText(type.getTitle());
+			main.setImageResource(cities.get(index).getPicture());
+			data.setText(cities.get(index).getTemperature(getBaseApplication().getData().isFahrenheit()));
+		} else if (type.getPosition() == 1) {
+			information.setText(type.getTitle());
 			main.setImageResource(R.drawable.wind);
-			data.setText(getData().getWind());
-		} else if(type == 2){
-			information.setText(getBaseApplication().getType(type));
+			data.setText(cities.get(index).getWind());
+		} else if(type.getPosition() == 2){
+			information.setText(type.getTitle());
 			main.setImageResource(R.drawable.humidity);
-			data.setText(getData().getHumidity());
+			data.setText(cities.get(index).getHumidity());
 		}
 	}
 
-	public Data getData() {
-		return getData(index);
-	}
-
-	public Data getData(int index) {
-		return getBaseApplication().getListData().get(index);
-
-	}
-
-	public void swipe() {
-		boolean back = false;
-		if (action == Action.SWIPE_DOWN_TO_UP) {
-			increaseTypeData();
-		} else if (action == Action.SWIPE_UP_TO_DOWN) {
-			decreaseTypeData();
-		} else if (action == Action.SWIPE_RIGHT_TO_LEFT) {
-			increaseData();
-		} else if (action == Action.SWIPE_LEFT_TO_RIGHT) {
-			if(index == 0)
-				back = true;
-			decreaseData();
-		}
-		if(back){
-			
-			this.finish();
-			SimpleWeatherInformation.this.overridePendingTransition(R.anim.other_out,R.anim.main_in);
-		} else {
-			initData();
-		}
-	}
-
+	/*
 	public void increaseTypeData() {
 		if (type < 2) {
 			type++;
@@ -137,20 +115,8 @@ public class SimpleWeatherInformation extends MyActivity implements
 		if (type > 0) {
 			type--;
 		}
-	}
-
-	private void increaseData() {
-		if (index < getBaseApplication().getListData().size() - 1) {
-			index++;
-		}
-	}
-
-	private void decreaseData() {
-		if (index > 0) {
-			index--;
-		}
-	}
-
+	}*/
+	/*
 	private float startX, startY, min = 100;
 	private Action action;
 
@@ -189,5 +155,5 @@ public class SimpleWeatherInformation extends MyActivity implements
 			}
 		}
 		return false;
-	}
+	}*/
 }

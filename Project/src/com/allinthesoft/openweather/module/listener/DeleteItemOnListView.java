@@ -9,16 +9,16 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
 
 import com.allinthesoft.openweather.R;
-import com.allinthesoft.openweather.common.MyActivity;
+import com.allinthesoft.openweather.common.DataActivity;
 import com.allinthesoft.openweather.core.weather.adapter.DataAdapteur;
 
 public class DeleteItemOnListView implements OnItemLongClickListener,OnClickListener {
 
 	private DataAdapteur adaptateur;
-	private MyActivity activity;
+	private DataActivity activity;
 	private int position;
 	
-	public DeleteItemOnListView(DataAdapteur adaptateur, MyActivity activity) {
+	public DeleteItemOnListView(DataAdapteur adaptateur, DataActivity activity) {
 		this.adaptateur = adaptateur;
 		this.activity = activity;
 	}
@@ -58,6 +58,6 @@ public class DeleteItemOnListView implements OnItemLongClickListener,OnClickList
 	}
 
 	private String getCityName(){
-		return activity.getBaseApplication().getListData().get(position).getName();
+		return activity.getBaseApplication().getData().getCities().get(position).getName();
 	}
 }

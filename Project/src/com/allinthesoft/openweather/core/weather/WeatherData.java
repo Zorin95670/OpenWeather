@@ -1,6 +1,6 @@
 package com.allinthesoft.openweather.core.weather;
 
-public class Weather {
+public class WeatherData {
 
 	private int id;
 	

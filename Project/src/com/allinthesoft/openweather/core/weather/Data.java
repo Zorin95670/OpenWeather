@@ -1,167 +1,123 @@
 package com.allinthesoft.openweather.core.weather;
 
-import java.text.DecimalFormat;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.allinthesoft.openweather.R;
-
+import com.allinthesoft.openweather.core.exception.AndroidException;
+import com.allinthesoft.openweather.tools.list.core.array.ArrayExtendedList;
 
 public class Data {
-	private Location location;
-	private boolean myLocation;
-	private String name, country;
-	
-	private String id;
-	
-	private String sunrise, sunset;
-	
-	private Weather mainWeather;
 
-	private boolean hooter, cooler;
-	
+	private ArrayExtendedList<CityData> cities;
+	private int position;
+	private boolean fahrenheit, dataChanged;
+
 	public Data() {
-		setHooter(false);
-		setCooler(false);
-		setMyLocation(false);
+		cities = new ArrayExtendedList<CityData>();
 	}
 	
-	public Location getLocation() {
-		return location;
+	public ArrayExtendedList<CityData> getCities(){
+		return cities;
+	}
+	
+	public boolean isFahrenheit() {
+		return fahrenheit;
 	}
 
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setFahrenheit(boolean fahrenheit) {
+		this.fahrenheit = fahrenheit;
 	}
 
-	public String getName() {
-		return name;
+	public boolean isDataChanged() {
+		return dataChanged;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setDataChanged(boolean dataChanged) {
+		this.dataChanged = dataChanged;
 	}
-
-	public String getSunrise() {
-		return sunrise;
-	}
-
-	public void setSunrise(String sunrise) {
-		this.sunrise = sunrise;
-	}
-
-	public String getSunset() {
-		return sunset;
-	}
-
-	public void setSunset(String sunset) {
-		this.sunset = sunset;
-	}
-
-	public Weather getMainWeather() {
-		return mainWeather;
-	}
-
-	public void setMainWeather(Weather mainWeather) {
-		this.mainWeather = mainWeather;
-	}
-
-	public String getWind() {
-		// TODO Auto-generated method stub
-		return getMainWeather().getWindSpeed() + "m/s\nDeg : " + getMainWeather().getWindDeg() +"°";
-	}
-
-	public String getTemperature(boolean fahrenheit) {
-		DecimalFormat d = new DecimalFormat("##,#");
-		double t = getMainWeather().getTemp();
-		double tmi = getMainWeather().getTempMin();
-		double tma = getMainWeather().getTempMax();
-		if(!fahrenheit){
-			return d.format((t - 273.15)) + "°C\nMin : " + d.format((tmi - 273.15)) + "°C\nMax : " + d.format((tmi - 273.15)) + "°C";
+	
+	public String toJSON() {
+		JSONObject root = new JSONObject();
+		try {
+			if (fahrenheit) {
+				root.put("fahrenheit", "yes");
+			} else {
+				root.put("fahrenheit", "no");
+			}
+			JSONArray array = new JSONArray();
+			if (cities.size() != 0) {
+				for (int i = 0 ; i < cities.size() ; i++) {
+					array.put(cities.get(i).getId());
+				}
+				root.put("cities", array);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		t = (t - 273.15)* 1.8000 + 32.00;
-		tmi = (tmi - 273.15)* 1.8000 + 32.00;
-		tma = (tma - 273.15)* 1.8000 + 32.00;
-		return d.format(t) + "°F\nMin : " + d.format(tmi) + "°F\nMax : " + d.format(tmi) + "°F";
+		return root.toString();
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 	
-	public String getShortTemperature(boolean fahrenheit){
-		DecimalFormat d = new DecimalFormat("##,#");
-		double t = getMainWeather().getTemp();
-		if(!fahrenheit){
-			return d.format((t - 273.15)) + "°C";
+	public boolean increase() {
+		if (position < cities.size() - 1) {
+			position++;
+			return true;
 		}
-		t = (t - 273.15)* 1.8000 + 32.00;
-		return d.format(t) + "°F";
+		return false;
 	}
-	
-	public int getPicture(){
-		int id = getMainWeather().getId();
-		if(id >= 200 && id < 300){
-			return R.drawable.storm;
-		} else if(id >= 300 && id < 400){
-			return R.drawable.bigrain;
-		} else if(id >= 500 && id < 600){
-			return R.drawable.rain;
-		} else if(id >= 600 && id < 700){
-			return R.drawable.snow;
-		} else if(id >= 700 && id < 800){
-			return R.drawable.fog;
-		} else if(id == 800){
-			return R.drawable.day;// TODO or night
-		} else if(id == 801){
-			return R.drawable.cloudday;// TODO or night
-		} else if(id > 801 && id < 900 ){
-			return R.drawable.overcast;
+
+	public boolean decrease() {
+		if (position > 0) {
+			position--;
+			return true;
 		}
-		return R.drawable.run;
-	}
-
-	public boolean isHooter() {
-		return hooter;
-	}
-
-	public void setHooter(boolean hooter) {
-		this.hooter = hooter;
-	}
-
-	public boolean isCooler() {
-		return cooler;
-	}
-
-	public void setCooler(boolean cooler) {
-		this.cooler = cooler;
-	}
-
-	public boolean isMyLocation() {
-		return myLocation;
-	}
-
-	public void setMyLocation(boolean myLocation) {
-		this.myLocation = myLocation;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
+		return true;
 	}
 	
-	@Override
-	public String toString(){
-		return getName() + "," + getCountry();
+	public void add(CityData data) throws AndroidException {
+		if (data != null) {
+			boolean check = true;
+			for (int index = 0; index < cities.size(); index++) {
+				if (data.getName() != null && data.getName().equals(cities.get(index).getName())) {
+					check = false;
+					break;
+				}
+			}
+			if (check) {
+				data.setMyLocation(false);
+				cities.add(data);
+			}
+			setDataChanged(check);
+		}
 	}
 
-	public String getHumidity() {
-		// TODO Auto-generated method stub
-		return new DecimalFormat("##").format(mainWeather.getHumidity()) + " %";
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
+	public void addCurent(CityData data) throws AndroidException {
+		if (data != null) {
+			boolean check = true;
+			for (int index = 0; index < cities.size(); index++) {
+				if (data.getName().equals(cities.get(index).getName())) {
+					check = false;
+					cities.get(index).setMyLocation(true);
+					setDataChanged(true);
+				} else {
+					cities.get(index).setMyLocation(false);
+				}
+			}
+			
+			if (check) {
+				data.setMyLocation(true);
+				cities.add(data);
+			}
+			setDataChanged(check);
+		}
 	}
 }

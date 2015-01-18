@@ -7,11 +7,8 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -19,77 +16,42 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.allinthesoft.openweather.R;
-import com.allinthesoft.openweather.common.MyActivity;
+import com.allinthesoft.openweather.common.DataActivity;
 import com.allinthesoft.openweather.core.exception.AndroidException;
-import com.allinthesoft.openweather.core.weather.Data;
+import com.allinthesoft.openweather.core.weather.CityData;
 import com.allinthesoft.openweather.core.weather.Location;
 import com.allinthesoft.openweather.core.weather.adapter.DataAdapteur;
 import com.allinthesoft.openweather.core.weather.adapter.PlacesAutoCompleteAdapter;
 import com.allinthesoft.openweather.module.activity.information.SimpleWeatherInformation;
+import com.allinthesoft.openweather.module.listener.ChangeActivityOnItemListener;
 import com.allinthesoft.openweather.module.listener.DeleteItemOnListView;
 import com.allinthesoft.openweather.module.listener.OnSwipeListener;
+import com.allinthesoft.openweather.module.listener.SearchCityOnKeyboardActionListener;
 import com.allinthesoft.openweather.service.openweather.gps.GPSTracker;
 import com.allinthesoft.openweather.service.openweather.task.JSONCityTask;
 import com.allinthesoft.openweather.service.openweather.task.JSONWeatherTask;
 
-public class HomeActivity extends MyActivity implements OnClickListener {
+public class HomeActivity extends DataActivity implements OnClickListener {
 
 	private DataAdapteur adapter;
 	private Dialog settings;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		ListView list = (ListView) findViewById(R.id.ah_list_city);
-		adapter = new DataAdapteur(this, R.id.ah_list_city, getBaseApplication());
+		adapter = new DataAdapteur(this, R.id.ah_list_city, getBaseApplication().getData());
 		list.setAdapter(adapter);
 		
-		list.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Intent myIntent = new Intent(HomeActivity.this,
-						SimpleWeatherInformation.class);
-				myIntent.putExtra("Data", position); // Optional parameters
-				HomeActivity.this.startActivity(myIntent);
-				overridePendingTransition(R.anim.main_out, R.anim.other_in);
-			}
-		});
+		list.setOnItemClickListener(new ChangeActivityOnItemListener(this, SimpleWeatherInformation.class));
 		list.setOnItemLongClickListener(new DeleteItemOnListView(adapter, this));
-		((AutoCompleteTextView) findViewById(R.id.ah_city_search))
-				.setOnEditorActionListener(new OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView v, int actionId,
-							KeyEvent event) {
-						if (actionId == 0) {
-							JSONWeatherTask task = new JSONWeatherTask();
-							task.execute(new String[]{v.getText() + ""});
-							try {
-								getBaseApplication().add(task.get());
-								if(getBaseApplication().isDataChange()){
-									adapter.notifyDataSetChanged();
-								}
-								v.setText("");
-								v.clearFocus();
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (ExecutionException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (AndroidException e) {
-								Toast.makeText(getBaseContext(), getString(e.getMessageId()), Toast.LENGTH_LONG).show();
-							}
-						}
-						return false;
-					}
-				});
+		
+		AutoCompleteTextView text = ((AutoCompleteTextView) findViewById(R.id.ah_city_search));
+		text.setOnKeyListener(new SearchCityOnKeyboardActionListener(text, adapter, getBaseApplication().getData()));
 		initAutoComplete();
 		findViewById(R.id.ah_localisation).setOnClickListener(this);
 		RelativeLayout view = (RelativeLayout) findViewById(R.id.ah_content);
@@ -97,7 +59,7 @@ public class HomeActivity extends MyActivity implements OnClickListener {
 			
 			@Override
 			public void swipe() {
-				if (getAction() == Action.SWIPE_RIGHT_TO_LEFT && getBaseApplication().getListData().size() != 0) {
+				if (getAction() == Action.SWIPE_RIGHT_TO_LEFT && getBaseApplication().getData().getCities().size() != 0) {
 					
 					Intent myIntent = new Intent(HomeActivity.this,
 							SimpleWeatherInformation.class);
@@ -123,14 +85,14 @@ public class HomeActivity extends MyActivity implements OnClickListener {
 	}
 	
 	private void initCities() {
-		List<Data> cities = getBaseApplication().getListData();
+		List<CityData> cities = getBaseApplication().getData().getCities();
 		if(cities != null){
 			int len = cities.size();
 			for(int i = 0 ; i < len ; i++){
 				JSONWeatherTask task = new JSONWeatherTask();
 				task.execute(new String[]{cities.get(i).getId()});
 				try {
-					Data data = task.get();
+					CityData data = task.get();
 					cities.set(i, data);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -162,7 +124,7 @@ public class HomeActivity extends MyActivity implements OnClickListener {
 	}
 
 	public void changeTemperature(boolean b) {
-		getBaseApplication().setFahrenheit(b);
+		getBaseApplication().getData().setFahrenheit(b);
 		adapter.notifyDataSetChanged();
 	}
 
@@ -172,7 +134,7 @@ public class HomeActivity extends MyActivity implements OnClickListener {
 			settings = new Dialog(HomeActivity.this);
 			settings.setContentView(R.layout.dialog_settings);
 			settings.setTitle(R.string.settings);
-			if(!getBaseApplication().isFahrenheit()){
+			if(!getBaseApplication().getData().isFahrenheit()){
 				((RadioButton)settings.findViewById(R.id.do_celcius)).setChecked(true);
 				((RadioButton)settings.findViewById(R.id.do_fahrenheit)).setChecked(false);
 			}
@@ -213,9 +175,9 @@ public class HomeActivity extends MyActivity implements OnClickListener {
 					JSONWeatherTask weatherTask = new JSONWeatherTask();
 					weatherTask.execute(new String[]{city});
 					try {
-						Data data = weatherTask.get();
-						getBaseApplication().addCurent(data);
-						if(getBaseApplication().isDataChange()){
+						CityData data = weatherTask.get();
+						getBaseApplication().getData().addCurent(data);
+						if(getBaseApplication().getData().isDataChanged()){
 							adapter.notifyDataSetChanged();
 						}
 					} catch (InterruptedException e) {
