@@ -4,8 +4,8 @@ import org.json.JSONException;
 
 import android.os.AsyncTask;
 
-import com.allinthesoft.openweather.service.openweather.HttpClient;
-import com.allinthesoft.openweather.service.openweather.JSONConverter;
+import com.allinthesoft.openweather.service.openweather.http.HttpClient;
+import com.allinthesoft.openweather.service.openweather.parserjson.JSONConverter;
 
 public class JSONCityTask extends AsyncTask<String, Void, String> {
 

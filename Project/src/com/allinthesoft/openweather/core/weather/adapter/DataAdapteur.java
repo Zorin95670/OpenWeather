@@ -65,7 +65,7 @@ public class DataAdapteur extends ArrayAdapter<CityData> {
 		holder.mainView = (ImageView) v.findViewById(R.id.data_main);
 		holder.tempView = (TextView) v.findViewById(R.id.data_temp);
 		holder.cityView = (TextView) v.findViewById(R.id.data_city);
-		holder.tokenView = (ImageView) v.findViewById(R.id.data_token);
+		//holder.tokenView = (ImageView) v.findViewById(R.id.data_token);
 		holder.locateView = (ImageView) v.findViewById(R.id.data_locate);
 		holder.position = position;
 		

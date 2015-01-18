@@ -1,4 +1,4 @@
-package com.allinthesoft.openweather.service.openweather;
+package com.allinthesoft.openweather.service.openweather.http;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -10,6 +10,7 @@ public class HttpClient {
 
 	private static String WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=";
 	private static String CITY_URL = "http://maps.googleapis.com/maps/api/geocode/json?latlng=";
+	private static String DAY_WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&cnt=7&q=";
 
 	public String getWeatherData(String location) {
 		return getData(WEATHER_URL + location);
@@ -17,6 +18,11 @@ public class HttpClient {
 	
 	public String getCityName(String location){
 		return getData(CITY_URL + location);
+	}
+
+	
+	public String getDailyWeather(String location){
+		return getData(DAY_WEATHER_URL + location);
 	}
 	
 	public String getData(String url){

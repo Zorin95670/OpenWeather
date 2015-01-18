@@ -4,7 +4,6 @@ import java.text.DecimalFormat;
 
 import com.allinthesoft.openweather.R;
 
-
 public class CityData {
 	private Location location;
 	private boolean myLocation;
@@ -18,10 +17,13 @@ public class CityData {
 
 	private boolean hooter, cooler;
 	
+	private WeatherData[] dailyWeather;
+	
 	public CityData() {
 		setHooter(false);
 		setCooler(false);
 		setMyLocation(false);
+		dailyWeather = new WeatherData[7];
 	}
 	
 	public Location getLocation() {
@@ -65,7 +67,6 @@ public class CityData {
 	}
 
 	public String getWind() {
-		// TODO Auto-generated method stub
 		return getMainWeather().getWindSpeed() + "m/s\nDeg : " + getMainWeather().getWindDeg() +"°";
 	}
 
@@ -93,8 +94,7 @@ public class CityData {
 		return d.format(t) + "°F";
 	}
 	
-	public int getPicture(){
-		int id = getMainWeather().getId();
+	public int getPictureById(int id){
 		if(id >= 200 && id < 300){
 			return R.drawable.storm;
 		} else if(id >= 300 && id < 400){
@@ -113,6 +113,18 @@ public class CityData {
 			return R.drawable.overcast;
 		}
 		return R.drawable.run;
+	}
+	
+	public int getPicture(){
+		int id = getMainWeather().getId();
+		
+		return getPictureById(id);
+	}
+	
+	public int getPicture(int view){
+		int id = dailyWeather[view].getId();
+		
+		return getPictureById(id);
 	}
 
 	public boolean isHooter() {
@@ -163,5 +175,43 @@ public class CityData {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public void setDailyWeather(WeatherData[] dailyWeather) {
+		this.dailyWeather = dailyWeather;
+	}
+	
+	public CharSequence getDate(int index){
+		return dailyWeather[index].getDate();
+	}
+
+	public CharSequence getTempEve(int index, boolean fahrenheit) {
+		DecimalFormat d = new DecimalFormat("##,#");
+		double t = dailyWeather[index].getTemp();
+		if(!fahrenheit){
+			return d.format((t - 273.15)) + "°C";
+		}
+		t = (t - 273.15)* 1.8000 + 32.00;
+		return d.format(t) + "°F";
+	}
+
+	public CharSequence getTempMor(int index, boolean fahrenheit) {
+		DecimalFormat d = new DecimalFormat("##,#");
+		double t = dailyWeather[index].getTempMin();
+		if(!fahrenheit){
+			return d.format((t - 273.15)) + "°C";
+		}
+		t = (t - 273.15)* 1.8000 + 32.00;
+		return d.format(t) + "°F";
+	}
+
+	public CharSequence getTempNight(int index, boolean fahrenheit) {
+		DecimalFormat d = new DecimalFormat("##,#");
+		double t = dailyWeather[index].getTempMax();
+		if(!fahrenheit){
+			return d.format((t - 273.15)) + "°C";
+		}
+		t = (t - 273.15)* 1.8000 + 32.00;
+		return d.format(t) + "°F";
 	}
 }

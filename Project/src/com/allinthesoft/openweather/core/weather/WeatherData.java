@@ -1,8 +1,14 @@
 package com.allinthesoft.openweather.core.weather;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class WeatherData {
 
 	private int id;
+	
+	private long date;
 	
 	private double temp, tempMin, tempMax, pressure, humidity;
 	
@@ -76,5 +82,16 @@ public class WeatherData {
 	public void setWindDeg(double windDeg) {
 		//TODO convert windDeg to string
 		this.windDeg = windDeg + "";
+	}
+
+	public CharSequence getDate() {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("EEEE",Locale.getDefault());
+		String txt = sdf.format(new Date(date));
+		return txt.substring(0,1).toUpperCase() + txt.substring(1);
+	}
+
+	public void setDate(long date) {
+		this.date = date*1000;
 	}
 }

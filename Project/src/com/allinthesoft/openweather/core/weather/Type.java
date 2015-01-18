@@ -1,5 +1,7 @@
 package com.allinthesoft.openweather.core.weather;
 
+import android.util.Log;
+
 import com.allinthesoft.openweather.R;
 
 public class Type {
@@ -19,25 +21,30 @@ public class Type {
 	}
 
 	public int getTitle() {
+		Log.i("TEST", getPosition() + "");
 		if (getPosition() == 0) {
 			return R.string.type_temp;
 		} else if (getPosition() == 1) {
 			return R.string.type_wind;
 		} else if(getPosition() == 2){
 			return R.string.type_humidity;
+		} else if(getPosition() == 3){
+			return R.string.type_daily;
 		}
 		return R.string.type_info;
 	}
 	
 	public void increase() {
-		if (position < 2) {
+		if (position < 3) {
 			position++;
 		}
+		Log.i("TEST", "Position " + getPosition());
 	}
 
 	public void decrease() {
 		if (position > 0) {
 			position--;
 		}
+		Log.i("TEST", "Position " + getPosition());
 	}
 }

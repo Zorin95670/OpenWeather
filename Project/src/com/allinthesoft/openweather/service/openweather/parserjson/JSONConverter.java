@@ -1,4 +1,4 @@
-package com.allinthesoft.openweather.service.openweather;
+package com.allinthesoft.openweather.service.openweather.parserjson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,6 +55,27 @@ public class JSONConverter {
 		String city = array.getJSONObject(2).getString("long_name");
 		String country = array.getJSONObject(5).getString("short_name");
 		return city + "," + country;
+	}
+
+	public WeatherData[] getDailyWeather() throws JSONException {
+		WeatherData[] list = new WeatherData[7];
+		JSONObject root = new JSONObject(json);
+		JSONArray listWeather = root.getJSONArray("list");
+		JSONObject weather;
+		for(int i = 0 ; i < list.length ; i++){
+			weather = listWeather.getJSONObject(i);
+			list[i] = new WeatherData();
+			list[i].setDate(weather.getLong("dt"));
+			list[i].setHumidity(weather.getDouble("humidity"));
+			list[i].setId(weather.getJSONArray("weather").getJSONObject(0).getInt("id"));
+			list[i].setPressure(weather.getDouble("pressure"));
+			list[i].setTemp(weather.getJSONObject("temp").getDouble("eve"));
+			list[i].setTempMax(weather.getJSONObject("temp").getDouble("night"));
+			list[i].setTempMin(weather.getJSONObject("temp").getDouble("morn"));
+			list[i].setWindDeg(weather.getDouble("deg"));
+			list[i].setWindSpeed(weather.getDouble("speed"));
+		}
+		return list;
 	}
 
 }

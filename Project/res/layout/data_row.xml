@@ -4,14 +4,15 @@
     android:layout_height="50dp"
     android:layout_gravity="center"
     android:orientation="horizontal"
-    android:padding="5dp" >
+    android:padding="5dp"
+    android:weightSum="7" >
 
     <ImageView
         android:id="@+id/data_main"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_vertical"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:contentDescription="@string/cd_main"
         android:src="@drawable/day" />
 
@@ -25,27 +26,21 @@
 
     <TextView
         android:id="@+id/data_temp"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="3"
+        android:layout_weight="1"
+        android:gravity="center"
         android:text="@string/default_temp" />
 
     <TextView
         android:id="@+id/data_city"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="6"
+        android:layout_weight="4"
+        android:gravity="center"
         android:paddingLeft="10dp"
         android:text="@string/default_city" />
-
-    <ImageView
-        android:id="@+id/data_token"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:contentDescription="@string/cd_main" />
 
 </LinearLayout>
