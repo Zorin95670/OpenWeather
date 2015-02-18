@@ -51,13 +51,16 @@ public class JSONConverter {
 	public String getCityName() throws JSONException {
 		if(json != null){
 			JSONObject root = new JSONObject(json);
+			JSONArray a = root.getJSONArray("results");
+			if(a.length() > 0){
 			JSONObject object = root.getJSONArray("results").getJSONObject(0);
 			JSONArray array = object.getJSONArray("address_components");
 			String city = array.getJSONObject(2).getString("long_name");
 			String country = array.getJSONObject(5).getString("short_name");
 			return city + "," + country;
+			}
 		}
-		return "X";
+		return null;
 	}
 
 	public WeatherData[] getDailyWeather() throws JSONException {

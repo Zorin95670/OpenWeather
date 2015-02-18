@@ -14,6 +14,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 
 
 public class GPSTracker extends Service implements LocationListener
@@ -62,6 +63,7 @@ public class GPSTracker extends Service implements LocationListener
             if (!isGPSEnabled && !isNetworkEnabled)
             {
                 // no network provider is enabled
+            	Log.i("TEST", "no network provider is enabled");
             }
             else
             {
@@ -103,9 +105,8 @@ public class GPSTracker extends Service implements LocationListener
         }
         catch (Exception e)
         {
-            //e.printStackTrace();
+        	Log.e("Error", e.getMessage());
         }
-
         return location;
     }
 
