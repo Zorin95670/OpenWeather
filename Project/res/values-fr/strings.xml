@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Open Weather</string>
+    <string name="action_settings">Options</string>
+    <string name="city_search">Recherchez la ville</string>
+    <string name="dt_delete_item">Supprimez la ville</string>
+    <string name="dm_delete_item">Voulez-vous supprimez la ville ?</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="option_F">°F</string>
+    <string name="ok">OK</string>
+    <string name="option_C">°C</string>
+    <string name="settings">Options</string>
+
+    <string name="default_city">Paris</string>
+    <string name="default_temp">10°C</string>
+    <string name="default_date">Day</string>
+    <string name="default_temp_eve">Après-midi</string>
+    <string name="default_temp_mor">Matin</string>
+    <string name="default_temp_night">Soir</string>
+    <string name="default_information">Température</string>
+    <string name="default_data">15°C</string>
+    <string name="default_refresh">Charge les données.</string>
+    <string name="default_wait">Chargement</string>
+    
+    <string name="cd_home">Page principale</string>
+    <string name="cd_main">Le temps</string>
+    <string name="cd_loader">Chargement.</string>
+    
+    <string name="type_info">Information</string>
+    <string name="type_temp">Température</string>
+    <string name="type_wind">Vent</string>
+    <string name="type_humidity">L\'humidité</string>
+    <string name="type_daily">Temps de la semaine</string>
+    
+    
+    <string name="error_get_location">Cannot get Location.</string>
+    <string name="error_conf_convert_json">Cannot convert the configuration data.</string>
+    <string name="error_constant_file_create">Error create data application.</string>
+    <string name="error_filewritter_close">Cannot close file.</string>
+    <string name="error_save_conf">Cannot save configuration.</string>
+    <string name="error_read_conf_file">Cannot read the file configuration</string>
+    <string name="error_malformed_conf">Configuration is corrupted.</string>
+</resources>

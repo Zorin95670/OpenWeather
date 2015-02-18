@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="50dp"
+    android:layout_gravity="center"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:weightSum="7" >
+
+    <ImageView
+        android:id="@+id/data_main"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:contentDescription="@string/cd_main"
+        android:src="@drawable/day" />
+
+    <ImageView
+        android:id="@+id/data_locate"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:contentDescription="@string/cd_main" />
+
+    <TextView
+        android:id="@+id/data_temp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/default_temp" />
+
+    <TextView
+        android:id="@+id/data_city"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:text="@string/default_city" />
+
+</LinearLayout>
