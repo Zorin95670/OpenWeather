@@ -10,6 +10,7 @@ import com.allinthesoft.openweather.core.weather.CityData;
 import com.allinthesoft.openweather.module.activity.home.HomeActivity;
 import com.allinthesoft.openweather.service.openweather.http.HttpClient;
 import com.allinthesoft.openweather.service.openweather.parserjson.JSONConverter;
+import com.allinthesoft.openweather.tools.list.core.array.ArrayExtendedList;
 
 public class JSONWeatherTask extends AsyncTask<String, Void, CityData> {
 
@@ -18,6 +19,9 @@ public class JSONWeatherTask extends AsyncTask<String, Void, CityData> {
 
 	public JSONWeatherTask(List<CityData> cities, HomeActivity activity) {
 		this.cities = cities;
+		if (this.cities == null) {
+			this.cities = new ArrayExtendedList<CityData>();
+		}
 		this.activity = activity;
 	}
 
@@ -29,7 +33,7 @@ public class JSONWeatherTask extends AsyncTask<String, Void, CityData> {
 			CityData data = null;
 			try {
 				data = converter.getWeatherData();
-				if(data != null){
+				if (data != null) {
 					json = ((new HttpClient()).getDailyWeather(params[0]));
 					converter = new JSONConverter(json);
 					data.setDailyWeather(converter.getDailyWeather());
@@ -61,11 +65,12 @@ public class JSONWeatherTask extends AsyncTask<String, Void, CityData> {
 				e.printStackTrace();
 			}
 		}
-
-		if (len > 0) {
-			activity.refreshEnd(true, cities);
-		} else {
-			activity.refreshEnd(false, null);
+		if (activity != null) {
+			if (len > 0) {
+				activity.refreshEnd(true, cities);
+			} else {
+				activity.refreshEnd(false, null);
+			}
 		}
 		return null;
 

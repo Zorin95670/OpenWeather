@@ -50,7 +50,7 @@ public class HomeActivity extends DataActivity implements OnClickListener {
 		list.setOnItemLongClickListener(new DeleteItemOnListView(adapter, this));
 		
 		AutoCompleteTextView text = ((AutoCompleteTextView) findViewById(R.id.ah_city_search));
-		text.setOnKeyListener(new SearchCityOnKeyboardActionListener(text, adapter, getBaseApplication().getData()));
+		text.setOnKeyListener(new SearchCityOnKeyboardActionListener(text, this, getBaseApplication().getData().getCities()));
 		initAutoComplete();
 		findViewById(R.id.ah_localisation).setOnClickListener(this);
 		RelativeLayout view = (RelativeLayout) findViewById(R.id.ah_content);
