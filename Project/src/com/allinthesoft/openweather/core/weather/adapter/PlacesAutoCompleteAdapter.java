@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -63,7 +62,6 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements F
             }};
         return filter;
     }
-    private static final String LOG_TAG = "TEST";
 
     private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
@@ -93,10 +91,8 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements F
                 jsonResults.append(buff, 0, read);
             }
         } catch (MalformedURLException e) {
-            Log.e(LOG_TAG, "Error processing Places API URL", e);
             return resultList;
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error connecting to Places API", e);
             return resultList;
         } finally {
             if (conn != null) {
@@ -115,7 +111,6 @@ public class PlacesAutoCompleteAdapter extends ArrayAdapter<String> implements F
                 resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
             }
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Cannot process JSON results", e);
         }
 
         return resultList;

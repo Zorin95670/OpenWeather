@@ -3,7 +3,6 @@ package com.allinthesoft.openweather.module.activity.information;
 import java.util.List;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -106,7 +105,6 @@ public class SimpleWeatherInformation extends DataActivity {
 			
 			@Override
 			public void swipe() {
-				Log.i("TEST", "Pass" );
 				boolean back = false;
 				if (getAction() == Action.SWIPE_DOWN_TO_UP) {
 					type.increase();

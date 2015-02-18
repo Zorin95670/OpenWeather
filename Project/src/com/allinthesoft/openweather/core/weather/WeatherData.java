@@ -14,6 +14,10 @@ public class WeatherData {
 	
 	private String windSpeed, windDeg;
 
+	public WeatherData() {
+		id = -1;
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -88,7 +92,7 @@ public class WeatherData {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("EEEE",Locale.getDefault());
 		String txt = sdf.format(new Date(date));
-		return txt.substring(0,1).toUpperCase() + txt.substring(1);
+		return txt.substring(0,1).toUpperCase(Locale.getDefault()) + txt.substring(1);
 	}
 
 	public void setDate(long date) {

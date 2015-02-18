@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutionException;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
@@ -37,7 +36,7 @@ import com.allinthesoft.openweather.service.openweather.task.JSONWeatherTask;
 public class HomeActivity extends DataActivity implements OnClickListener {
 
 	private DataAdapteur adapter;
-	private Dialog settings;
+	private Dialog dialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,46 +68,33 @@ public class HomeActivity extends DataActivity implements OnClickListener {
 				}
 			}
 		});
-		
-		initCities();
 		findViewById(R.id.ah_refresh).setOnClickListener(this);
 		findViewById(R.id.ah_settings).setOnClickListener(this);
 	}
-
-	public void refreshData(){
-		Dialog dialog = new Dialog(HomeActivity.this);
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		dialog = new Dialog(HomeActivity.this);
 		dialog.setContentView(R.layout.dialog_loading);
 		dialog.setTitle(R.string.default_wait);
 		dialog.show();
 		initCities();
-		dialog.dismiss();
+	}
+
+	public void refreshData(){
+		dialog = new Dialog(HomeActivity.this);
+		dialog.setContentView(R.layout.dialog_loading);
+		dialog.setTitle(R.string.default_wait);
+		dialog.show();
+		initCities();
+		
 	}
 	
 	private void initCities() {
 		List<CityData> cities = getBaseApplication().getData().getCities();
-		if(cities != null){
-			int len = cities.size();
-			for(int i = 0 ; i < len ; i++){
-				JSONWeatherTask task = new JSONWeatherTask();
-				task.execute(new String[]{cities.get(i).getId()});
-				try {
-					CityData data = task.get();
-					cities.set(i, data);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			if(len > 0){
-				adapter.notifyDataSetChanged();
-			}
-		} else {
-			// TODO problem
-		}
+		JSONWeatherTask task = new JSONWeatherTask(cities, this);
+		task.execute(new String[0]);
 	}
 
 	private void initAutoComplete() {
@@ -131,14 +117,14 @@ public class HomeActivity extends DataActivity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if(v.getId() == R.id.ah_settings){
-			settings = new Dialog(HomeActivity.this);
-			settings.setContentView(R.layout.dialog_settings);
-			settings.setTitle(R.string.settings);
+			dialog = new Dialog(HomeActivity.this);
+			dialog.setContentView(R.layout.dialog_settings);
+			dialog.setTitle(R.string.settings);
 			if(!getBaseApplication().getData().isFahrenheit()){
-				((RadioButton)settings.findViewById(R.id.do_celcius)).setChecked(true);
-				((RadioButton)settings.findViewById(R.id.do_fahrenheit)).setChecked(false);
+				((RadioButton)dialog.findViewById(R.id.do_celcius)).setChecked(true);
+				((RadioButton)dialog.findViewById(R.id.do_fahrenheit)).setChecked(false);
 			}
-			((RadioGroup)settings.findViewById(R.id.do_group)).setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			((RadioGroup)dialog.findViewById(R.id.do_group)).setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				
 				@Override
 				public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -149,18 +135,21 @@ public class HomeActivity extends DataActivity implements OnClickListener {
 					}
 				}
 			});
-			((Button)settings.findViewById(R.id.do_close)).setOnClickListener(new OnClickListener() {
+			((Button)dialog.findViewById(R.id.do_close)).setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
-					settings.dismiss();
+					dialog.dismiss();
 				}
 			});
-			settings.show();
+			dialog.show();
 		} else if(v.getId() == R.id.ah_refresh){
-			Log.i("TEST", "refresh");
 			refreshData();
 		} else if(v.getId() == R.id.ah_localisation){
+			dialog = new Dialog(HomeActivity.this);
+			dialog.setContentView(R.layout.dialog_loading);
+			dialog.setTitle(R.string.default_wait);
+			dialog.show();
 			GPSTracker gpsTracker = new GPSTracker(HomeActivity.this);
 
 			if (gpsTracker.canGetLocation()) {
@@ -172,7 +161,7 @@ public class HomeActivity extends DataActivity implements OnClickListener {
 				String city = null;
 				try {
 					city = task.get();
-					JSONWeatherTask weatherTask = new JSONWeatherTask();
+					JSONWeatherTask weatherTask = new JSONWeatherTask(null,this);
 					weatherTask.execute(new String[]{city});
 					try {
 						CityData data = weatherTask.get();
@@ -198,5 +187,18 @@ public class HomeActivity extends DataActivity implements OnClickListener {
 				}
 			}
 		}
+	}
+	public void refreshEnd(boolean state, List<CityData> cities){
+		if(dialog != null){
+			dialog.dismiss();
+		}
+		if(state){
+			for(int i = 0 ; i < cities.size() ; i++){
+				adapter.getItem(i).setCity(cities.get(i));
+			}
+		}
+	}
+	public void notidyAdapter(){
+		adapter.notifyDataSetChanged();
 	}
 }

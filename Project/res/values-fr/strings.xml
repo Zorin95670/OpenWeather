@@ -20,8 +20,8 @@
     <string name="default_temp_night">Soir</string>
     <string name="default_information">Température</string>
     <string name="default_data">15°C</string>
-    <string name="default_refresh">Actualisez.</string>
-    <string name="default_wait">Chargement &#8230;</string>
+    <string name="default_refresh">Charge les données.</string>
+    <string name="default_wait">Chargement</string>
     
     <string name="cd_home">Page principale</string>
     <string name="cd_main">Le temps</string>

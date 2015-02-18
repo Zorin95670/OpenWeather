@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import android.R;
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -17,8 +14,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
-import android.util.Log;
 
 
 public class GPSTracker extends Service implements LocationListener
@@ -80,8 +75,6 @@ public class GPSTracker extends Service implements LocationListener
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
-                    Log.d("Network", "Network");
-
                     if (locationManager != null)
                     {
                         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -99,8 +92,6 @@ public class GPSTracker extends Service implements LocationListener
                                 MIN_TIME_BW_UPDATES,
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
-                        Log.d("GPS Enabled", "GPS Enabled");
-
                         if (locationManager != null)
                         {
                             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -113,7 +104,6 @@ public class GPSTracker extends Service implements LocationListener
         catch (Exception e)
         {
             //e.printStackTrace();
-            Log.e("Error : Location", "Impossible to connect to LocationManager", e);
         }
 
         return location;
@@ -230,7 +220,6 @@ public class GPSTracker extends Service implements LocationListener
             catch (IOException e) 
             {
                 //e.printStackTrace();
-                Log.e("Error : Geocoder", "Impossible to connect to Geocoder", e);
             }
         }
 

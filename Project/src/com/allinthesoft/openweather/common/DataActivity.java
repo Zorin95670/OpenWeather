@@ -1,7 +1,6 @@
 package com.allinthesoft.openweather.common;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,13 +39,13 @@ public class DataActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void refreshData(){
+	/*public void refreshData(){
 		Dialog dialog = new Dialog(this);
 		dialog.setContentView(R.layout.dialog_loading);
 		dialog.setTitle(R.string.default_wait);
 		dialog.show();
 		// TODO initCities();
 		dialog.dismiss();
-	}
+	}*/
 	
 }

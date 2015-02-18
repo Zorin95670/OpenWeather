@@ -49,16 +49,24 @@ public class JSONConverter {
 	}
 
 	public String getCityName() throws JSONException {
-		JSONObject root = new JSONObject(json);
-		JSONObject object = root.getJSONArray("results").getJSONObject(0);
-		JSONArray array = object.getJSONArray("address_components");
-		String city = array.getJSONObject(2).getString("long_name");
-		String country = array.getJSONObject(5).getString("short_name");
-		return city + "," + country;
+		if(json != null){
+			JSONObject root = new JSONObject(json);
+			JSONObject object = root.getJSONArray("results").getJSONObject(0);
+			JSONArray array = object.getJSONArray("address_components");
+			String city = array.getJSONObject(2).getString("long_name");
+			String country = array.getJSONObject(5).getString("short_name");
+			return city + "," + country;
+		}
+		return "X";
 	}
 
 	public WeatherData[] getDailyWeather() throws JSONException {
 		WeatherData[] list = new WeatherData[7];
+		if(json == null){
+			for(int i = 0 ; i < 7 ; i++)
+				list[i] = new WeatherData();
+			return list;
+		}
 		JSONObject root = new JSONObject(json);
 		JSONArray listWeather = root.getJSONArray("list");
 		JSONObject weather;

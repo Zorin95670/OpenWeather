@@ -23,7 +23,11 @@ public class CityData {
 		setHooter(false);
 		setCooler(false);
 		setMyLocation(false);
+		mainWeather = new WeatherData();
 		dailyWeather = new WeatherData[7];
+		for(int i = 0 ; i < 7 ; i++){
+			dailyWeather[i] = new WeatherData();
+		}
 	}
 	
 	public Location getLocation() {
@@ -43,7 +47,9 @@ public class CityData {
 	}
 
 	public String getSunrise() {
-		return sunrise;
+		if(sunrise != null)
+			return sunrise;
+		return "X";
 	}
 
 	public void setSunrise(String sunrise) {
@@ -51,6 +57,8 @@ public class CityData {
 	}
 
 	public String getSunset() {
+		if(sunset != null)
+		return sunset;
 		return sunset;
 	}
 
@@ -67,7 +75,13 @@ public class CityData {
 	}
 
 	public String getWind() {
-		return getMainWeather().getWindSpeed() + "m/s\nDeg : " + getMainWeather().getWindDeg() +"°";
+		String speed = "X";
+		String deg = "X";
+		if(getMainWeather().getWindSpeed() != null)
+			speed = getMainWeather().getWindSpeed();
+		if(getMainWeather().getWindDeg() != null)
+			deg = getMainWeather().getWindDeg();
+		return speed + "m/s\nDeg : " + deg +"°";
 	}
 
 	public String getTemperature(boolean fahrenheit) {
@@ -111,6 +125,8 @@ public class CityData {
 			return R.drawable.cloudday;// TODO or night
 		} else if(id > 801 && id < 900 ){
 			return R.drawable.overcast;
+		} else if(id == -1){
+			return R.drawable.network_error;
 		}
 		return R.drawable.run;
 	}
@@ -152,7 +168,9 @@ public class CityData {
 	}
 
 	public String getCountry() {
+		if(country != null)
 		return country;
+		return "X";
 	}
 
 	public void setCountry(String country) {
@@ -213,5 +231,22 @@ public class CityData {
 		}
 		t = (t - 273.15)* 1.8000 + 32.00;
 		return d.format(t) + "°F";
+	}
+
+	public void setCity(CityData cityData) {
+		location = cityData.getLocation();
+		myLocation = cityData.isMyLocation();
+		name = cityData.getName();
+		country = cityData.getCountry();
+		id = cityData.getId();
+		sunrise = cityData.getSunrise();
+		sunset = cityData.getSunset();
+		mainWeather = cityData.getMainWeather();
+		hooter = cityData.isHooter();
+		cooler = cityData.isCooler();
+		dailyWeather = cityData.getDailyWeather();
+	}
+	public WeatherData[] getDailyWeather(){
+		return dailyWeather;
 	}
 }

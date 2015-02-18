@@ -27,7 +27,7 @@ public class SearchCityOnKeyboardActionListener implements OnKeyListener {
 	@Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_ENTER) {
-			JSONWeatherTask task = new JSONWeatherTask();
+			JSONWeatherTask task = new JSONWeatherTask(null, null);
 			task.execute(new String[]{text.getText() + ""});
 			try {
 				data.add(task.get());
